@@ -167,6 +167,7 @@ input:focus, textarea:focus, select:focus {
     /* можно задать или прозрачный фон или белый, но прозрачный надежнее  */
     /* background-color: #fff; */
     background: rgba(255, 255, 255, 0);
+    /* background: url(../img/close-icon.svg); */
 }
 
 .city-list-close img {
