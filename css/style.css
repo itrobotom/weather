@@ -1,0 +1,218 @@
+/* все глобальные стили пишем вначале, а все что ниже это может переопределить */
+
+* {
+    /* стандартно у блочных блоков свойство box-sizing: content-box
+    и это значит задавая width, height мы задаем размер только содержимого
+    и добавив border, padding суммарно увеличит блок
+    Поэтому стоит переопределить свойство box-sizing: border-box
+    и при задании размера туда войдут как содержимое, так и рамки с padding */
+    box-sizing: border-box;
+
+}
+/* Обнуляем отсупы во всем документе */
+body {
+    /* margin: 0; */
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px; 
+    font-weight: 400;
+    line-height: 40px; /* в макете 28, но этого явно мало */
+}
+
+.main-container {
+    border: 2px solid black;
+    width: 600px;
+    height: 435px;  
+}
+
+.search {
+    border-bottom: 2px solid black; 
+    height: 45px;
+}
+
+input {
+    border: 0px;
+    width: 80%;
+    font-size: 18px; 
+    padding-left: 10px; 
+} 
+
+/* чтобы форма не выделялась рамкой при наведении и после постановки курсора */
+/* иначе щель между рамкой дива и стандартной рамкой формы */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+}
+
+.btn-search {
+    /* ОЧЕНЬ ВАЖНО БЫЛО ЗАДАТЬ, ЧТОБЫ НЕ СМЕЩАЛОСЬ ПОЛЕ ВВОДА ФОРМЫ СЛЕВА ПРИ ДОБАВЛЕНИИ ОТСТУПА */
+    position: absolute;
+    padding-top: 5px;
+    padding-left: 80px;
+    /* border: none; */
+    border: none;
+    cursor: pointer; 
+    /* можно задать или прозрачный фон или белый, но прозрачный надежнее  */
+    /* background-color: #fff; */
+    background: rgba(255, 255, 255, 0);
+}
+
+/* form div {
+    display: inline-block;
+} */
+
+.main-section {
+    height: 390px;
+    display: flex;
+}
+
+.left-section {
+    width: 50%;
+    border-right: 2px solid black;
+}
+
+
+/* настройки левой сеции  без кнопок (табов)*/
+.tabs-cont {
+    width: 300px;
+    height: 345px;
+    /* все что вылазиет за пределы div обрежем */
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+/* ВОТ ЗДЕСЬ ЧТО-ТО НАДО ДЕЛАТЬ, ЧТОБЫ НЕ СЪЕЗЖАЛО ИЗОБРАЖЕНИЕ ПОСЛЕ НАЖАТИЯ ТАБОВ */
+.tabs-cont ul{
+    padding: 0;
+    margin: 0;
+    margin-top: 30px;
+}
+
+/* содержимое каждого из трех экранов меньше по ширене чем вся левая секция на 50 px */
+/* проваливаемся до нужного тега li только внутри обертки дивом с классом .tabs-cont */
+.tabs-cont ul li {
+    width: 300px;
+    height: 345px;  
+}
+
+
+/* при переключении табами экран уезажает вверх */
+.weather-num {
+    margin-top: 50px; 
+    /* margin-bottom: 50px; */
+    margin-left: 23px;
+}
+
+.weather-num p {
+    /* текст вываливается за div с классом .weather-num, и отступ margin делать
+    приходится больше, чтобы с макетом совпало. Как быть? */
+    font-size: 70px;
+    margin: 0;
+    /* высота строки */
+    /* line-height: 30px; */
+}
+
+.weather-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.weather-like {
+    /* margin-top: 98px; */
+    padding-left: 12px;
+    padding-right: 26px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ПРИ ДОБАВЛЕНИИ ПАДДИНГА СЛЕВА ПРИ ПЕРЕКЛЮЧЕНИИ ТАБА СИЛЬНО ВНИЗ УХОДИТ
+БЕЗ ПАДДИНГА ПРИЖАТА К ВЕРХУ... */
+.details {
+    margin-top: 20px;
+    padding-left: 10px;
+}
+
+.info-weather p {
+    margin: 0;
+}
+
+.right-section {
+    width: 50%;
+}
+
+.location {
+    height: 68px;
+    padding: 0;
+}
+
+.city {
+    border-top: 2px solid black;
+}
+
+.city-list {
+    padding-left: 18px;
+    padding-top: 25px; /* по макету 35, но это больше чем нужно визуально */
+    margin-top: 0;
+}
+
+.city-list-close {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-del-add-city {
+    border: none;
+    cursor: pointer; 
+    /* можно задать или прозрачный фон или белый, но прозрачный надежнее  */
+    /* background-color: #fff; */
+    background: rgba(255, 255, 255, 0);
+}
+
+.city-list-close img {
+    margin-right: 10px;
+}
+
+.tabs {
+
+}
+
+.tabs-btn {
+    font-size: 18px;
+    padding: 0;
+    margin: 0; 
+    display: flex;
+    justify-content: center; 
+    /* почему в примере 150px ширина? */
+    width: 298px;  
+    
+}
+
+li {
+    list-style: none;
+}
+
+.btn {
+    display: inline-block;
+    border: 1px solid black;
+    text-decoration: none; /* Убираем подчёркивание */ 
+    width: 99px;
+    height: 43px;
+    text-align: center;
+}
+
+.btn {
+    color: #000000; /* черный цвет текста */
+    background-color: #fff;
+}
+
+.btn:hover {
+    color: #fff; 
+    background-color:  #000000;
+}
+
+.location p {
+    margin: 0;
+    padding-top: 25px;
+    padding-left: 18px;
+}
