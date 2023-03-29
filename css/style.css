@@ -1,7 +1,7 @@
 /* все глобальные стили пишем вначале, а все что ниже это может переопределить */
 
 * {
-    /* стандартно у блочных блоков свойство box-sizing: content-box
+    /* стандартно у блочных блоков свойство box-sizig: content-box
     и это значит задавая width, height мы задаем размер только содержимого
     и добавив border, padding суммарно увеличит блок
     Поэтому стоит переопределить свойство box-sizing: border-box
@@ -85,14 +85,17 @@ input:focus, textarea:focus, select:focus {
 .tabs-cont ul{
     padding: 0;
     margin: 0;
-    margin-top: 30px;
+    /* ВООООООТ ЧТО ДАВАЛО СМЕЩЕНИЕ ПОСЛЕ ПЕРЕКЛЮЧЕНИЕ ТАБОВ!!!!!! */
+    /* margin-top: 30px; */
 }
 
 /* содержимое каждого из трех экранов меньше по ширене чем вся левая секция на 50 px */
 /* проваливаемся до нужного тега li только внутри обертки дивом с классом .tabs-cont */
 .tabs-cont ul li {
     width: 300px;
-    height: 345px;  
+    height: 345px; 
+    /* если в контейнер не поместятся элементы, то появится прокрутка */
+    Overflow-y: auto;
 }
 
 
@@ -129,12 +132,58 @@ input:focus, textarea:focus, select:focus {
 /* ПРИ ДОБАВЛЕНИИ ПАДДИНГА СЛЕВА ПРИ ПЕРЕКЛЮЧЕНИИ ТАБА СИЛЬНО ВНИЗ УХОДИТ
 БЕЗ ПАДДИНГА ПРИЖАТА К ВЕРХУ... */
 .details {
-    margin-top: 20px;
+    /* ЕСЛИ УБРАТЬ МАРЖИН, ТО УЕЗЖАЕТ ВНИЗ ПОГОДА (НАОБОРОТ) А ПРИ ПЕРЕКЛЮЧЕНИ ТАБОВ ВСТАЕТ НОРМАЛЬНО */
+    /* margin-top: 20px; */
     padding-left: 10px;
+}
+
+.city-widget-details {
+    margin: 0px;
 }
 
 .info-weather p {
     margin: 0;
+}
+
+.forecast {
+    padding: 15px;
+}
+.forecast-info {
+    width: 265px;
+    height: auto;
+    border: 1px solid black;
+    font-size: 18px; 
+    line-height: 24px;
+    margin-bottom: 8px;
+}
+
+.date-time-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    padding-bottom: 25px;
+}
+
+.date-time-info p {
+    margin: 0;
+}
+.forecast-weather {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.forecast-weather p{
+    margin: 0px;
+}
+
+.forecast-img-size {
+    width: 30px;
+    height: 30px;
+}
+
+.forecast-img-size img{
+    transform: translate(-5%, -25%);
 }
 
 .right-section {
@@ -156,9 +205,16 @@ input:focus, textarea:focus, select:focus {
     margin-top: 0;
 }
 
+.right-section {
+    Overflow-y: auto;
+}
+
 .city-list-close {
     display: flex;
     justify-content: space-between;
+}
+.new-like-city{
+    cursor: pointer;
 }
 
 .btn-del-add-city {
@@ -217,3 +273,4 @@ li {
     padding-top: 25px;
     padding-left: 18px;
 }
+

@@ -1,12 +1,12 @@
 import {getFavoriteCities, getCurrentCity, saveCurrentCity} from './storage.js'; 
-import {SERVER_URL, API_KEY, btnSearchCity, btnLike} from './consts.js';
+import {SERVER_URL, FORECAST_URL, API_KEY, btnSearchCity, btnLike, tabForecast} from './consts.js';
 import {addNewCity, delCity} from './array.js';
-import {tabNow, tabDetails, createNewCity} from './dom.js';
+import {tabNow, tabDetails, createNewCity, renderForecast} from './dom.js';
 
 export {render, cityesArr, cityName}; 
 //разбить на модули (вынести константы и поиск элементов в dom)
 
-let cityName = "Tomsk"; //по-умолчанию город
+let cityName = "Томск"; //по-умолчанию город
 
 let cityesArr = [];
 //перезапишем пустой cityesArr и добавим избранные города из localstorage при запуске приложения, если хранилище не пустое
@@ -20,12 +20,16 @@ console.log(cityesArr);
 if(getCurrentCity("inputCity") != null){
   requestWeatherLikeCity(getCurrentCity("inputCity"))
 } else { //если нет, пусть выводит по-умолчанию Tomsk
-  requestWeatherLikeCity("Tomsk");
+  requestWeatherLikeCity(cityName);
 }
 
 btnLike.addEventListener("click", addNewCity); //вызвать функцию render
 
 btnSearchCity.addEventListener("click", requestWeather);
+
+//обновляем данные прогноза только после нажатия на таб Прогноз
+tabForecast.addEventListener("click", requestForecast); 
+
 
 async function requestWeather(e) {
   e.preventDefault(); //сбросили обновление страницы при отрпавки формы
@@ -35,30 +39,50 @@ async function requestWeather(e) {
   saveCurrentCity(cityName);
   
   const url = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`;
+
   //проверяем на ошибку ответ сервера
   try {
-    //response.ok Булевское значение, которое указывает, выполнился ли запрос успешно или нет (то есть находится ли код ответа в диапазоне 200–299).
-    //Response.status Код ответа.
-    //Response.error() Возвращает новый объект Response, связанный с сетевой ошибкой.
     const response = await fetch(url);
-    let json = await response.json();
-    console.log(json);
-    //проверим json на код ответа если он успешный 200, то выведем в виджет все 
-    if(response.ok){
+    //if(response.ok){
+      let json = await response.json();
+      console.log(json);
+      //response.ok Булевское значение, которое указывает, выполнился ли запрос успешно или нет (то есть находится ли код ответа в диапазоне 200–299).
+      //Response.status Код ответа.
+      //Response.error() Возвращает новый объект Response, связанный с сетевой ошибкой.  
+      //if(response.ok){
       if (json.cod === 200) {
         updateWeather(json, cityName); //обновим данные по запрашиваемому городу
       } else {
-        alert(`Возникла проблема, ответ сервера: ${json.message}, Code: ${json.cod}`);
+        alert(`Возникла проблема с данными от сервера: ${json.message}, Code: ${json.cod}`);
       }
-    } else {
-      alert(`Возникла проблема! Ответ от сервера не пришел: ${Response.status}, Code: ${Response.error()}`);
-    }
+    //} else {
+      //alert(`Возникла проблема! Ответ от сервера не пришел: ${Response.status} - ${Response.statusText}, Code: ${Response.error()}`);
+      //throw new Error('Неверно введен адрес');
+    //}
+    
+    //проверим json на код ответа если он успешный 200, то выведем в виджет все 
     console.log('Урааааа, код не упал!!')
-  } catch (error) {
-    alert(`Внимание, ошибка сервера!: ${error.name} - ${error.message}`);
+  } catch (error) { //выведется созданная в else response OK
+    alert(`Не можем обратиться к серверу, проверьте интернет соединение: ${error.name} - ${error.message}`);
   } 
   console.log('Урааааа, код не упал2!!')
 }
+
+async function requestForecast() {
+  const urlForecast = `${FORECAST_URL}?q=${cityName}&appid=${API_KEY}&units=metric`; 
+  try {
+    const responseForecast = await fetch(urlForecast);
+    let jsonForecast = await responseForecast.json();
+    if (jsonForecast.cod === "200") {
+      //updateWeather(json, cityName); //обновим данные по запрашиваемому городу
+      renderForecast(jsonForecast);
+    } else {
+      alert(`Возникла проблема с данными от сервера: ${jsonForecast.message}, Code: ${jsonForecast.cod}`);
+    }
+  } catch (error) { //выведется созданная в else response OK
+    alert(`Не можем обратиться к серверу, проверьте интернет соединение: ${error.name} - ${error.message}`);
+  } 
+}  
 
 //почти такая же функция как requestWeather, но только без сброса отправки формы и обновления странцы
 //не знаю как функцию универсальную сделать
@@ -74,11 +98,11 @@ async function requestWeatherLikeCity(city) {
     } else {
       alert(`Возникла проблема! ${json.message}, Code: ${json.cod}`);
     }  
-    console.log('Урааааа, код не упал!!')
-  } catch (error) {
+    //console.log('Урааааа, код не упал!!');
+  } catch (error) { 
     alert(`Внимание, ошибка сервера!: ${error.name} - ${error.message}`);
   } 
-  console.log('Урааааа, код не упал2!!')
+  //console.log('Урааааа, код не упал2!!');
 }
 
 function updateWeather(json, cityName) { 
@@ -92,6 +116,7 @@ function updateWeather(json, cityName) {
 }
 
 //функция для обновления данных в dom дереве из массива и добавления каждому городу прослушивания кнопки удаления
+//ПЕРЕНЕСТИ В DOM!!!!!
 function render() {
   //ДОБАВИМ ЭЛЕМЕНТ li И ВСЕ В НЕГО ДЛЯ ФОРМИРОВАНИЯ СПИСКА ГОРОДОВ (elem очередной элемент массива, в котором есть поле название города elem.name и id города)
   //1) найдем список, в который будем вставлять li (города);
@@ -105,6 +130,7 @@ function render() {
   //добавим задачи из массива с данными в dom дерево
   cityesArr.forEach(function(elem){
     //3) добавим новый элемент li с дивом где будет название города и кнопкой удаления
+    // как в python только здесь возвращается из функции createNewCity 3 элемента и записывается в массив
     const [newLi, newDelButton, newCityName] = createNewCity(elem);
     //вешаем прослушку удаления на каждый новый добавленный город в избранное
     newDelButton.addEventListener("click", function() {
@@ -114,6 +140,7 @@ function render() {
     newCityName.addEventListener("click", function() {
       //делаем запрос погоды на этот город и выводим на основной экран слева
       requestWeatherLikeCity(elem.name);
+      cityName = elem.name; //обновляем переменную, чтобы при запросе forecast обновлялась погода города
     });
     parentListCityes.appendChild(newLi); //добавим в шаблон отлайканный город
   });
