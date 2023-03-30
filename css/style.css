@@ -61,7 +61,7 @@ input:focus, textarea:focus, select:focus {
 } */
 
 .main-section {
-    height: 390px;
+    height: 388px;
     display: flex;
 }
 
@@ -239,9 +239,9 @@ input:focus, textarea:focus, select:focus {
     padding: 0;
     margin: 0; 
     display: flex;
-    justify-content: center; 
+    justify-content: space-between; 
     /* почему в примере 150px ширина? */
-    width: 298px;  
+    width: 296px;  
     
 }
 
