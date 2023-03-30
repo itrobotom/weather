@@ -5,11 +5,11 @@ function saveFavoriteCities(favoriteCities) {
     //localStorage.clear(); //чистить целиком хранилище нельзя, там еще данные о введенном городе хранятся
     localStorage.removeItem("favoriteCities");
     //отчистить localstorage по ключу favoriteCities
-    localStorage.setItem("favoriteCities", JSON.stringify(favoriteCities));
+    localStorage.setItem("favoriteCities", JSON.stringify(Array.from(favoriteCities)));
 }
 
 function getFavoriteCities(key) {
-   return JSON.parse(localStorage.getItem(key));
+   return new Set(JSON.parse(localStorage.getItem(key))); //сразу преобразуем из массива в set
 }
 
 //получается такая же функция как и getFavoriteCities

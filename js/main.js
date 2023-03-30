@@ -3,18 +3,18 @@ import {SERVER_URL, FORECAST_URL, API_KEY, btnSearchCity, btnLike, tabForecast} 
 import {addNewCity, delCity} from './array.js';
 import {tabNow, tabDetails, createNewCity, renderForecast} from './dom.js';
 
-export {render, cityesArr, cityName}; 
+export {render}; 
 //разбить на модули (вынести константы и поиск элементов в dom)
 
 let cityName = "Томск"; //по-умолчанию город
 
-let cityesArr = [];
+//let cityesArr = [];
+let cityesSet = new Set();
 //перезапишем пустой cityesArr и добавим избранные города из localstorage при запуске приложения, если хранилище не пустое
 if(getFavoriteCities("favoriteCities") != null){
-  cityesArr = getFavoriteCities("favoriteCities");
+  cityesSet = getFavoriteCities("favoriteCities");
   render();
 }
-console.log(cityesArr);
 
 //проверить есть ли данные последнего введенного города в localstorage и если есть, вывести данные слева
 if(getCurrentCity("inputCity") != null){
@@ -23,7 +23,9 @@ if(getCurrentCity("inputCity") != null){
   requestWeatherLikeCity(cityName);
 }
 
-btnLike.addEventListener("click", addNewCity); //вызвать функцию render
+btnLike.addEventListener("click", function() {
+   addNewCity(cityesSet, cityName)
+}); 
 
 btnSearchCity.addEventListener("click", requestWeather);
 
@@ -33,7 +35,7 @@ tabForecast.addEventListener("click", requestForecast);
 
 async function requestWeather(e) {
   e.preventDefault(); //сбросили обновление страницы при отрпавки формы
-  cityName = document.getElementById("idCityInput").value; //получаем введенные данные из input
+  cityName = document.querySelector(".cityInput").value; //получаем введенные данные из input
   
   //сохраним текущий запрос в localstorage 
   saveCurrentCity(cityName);
@@ -127,21 +129,22 @@ function render() {
   // while (parentListCityes.firstChild) {
   //   parentListCityes.removeChild(listCity.firstChild);
   // }
-  //добавим задачи из массива с данными в dom дерево
-  cityesArr.forEach(function(elem){
+  //добавим задачи из set с данными в dom дерево
+  for(let city of cityesSet) {
+  //cityesArr.forEach(function(elem){
     //3) добавим новый элемент li с дивом где будет название города и кнопкой удаления
     // как в python только здесь возвращается из функции createNewCity 3 элемента и записывается в массив
-    const [newLi, newDelButton, newCityName] = createNewCity(elem);
+    const [newLi, newDelButton, newCityName] = createNewCity(city);
     //вешаем прослушку удаления на каждый новый добавленный город в избранное
     newDelButton.addEventListener("click", function() {
-      delCity(cityesArr, idCityInput);
+      delCity(cityesSet, city);
     });
     //вешаем прослушку на нажатие по div где находится город в нужном li 
     newCityName.addEventListener("click", function() {
       //делаем запрос погоды на этот город и выводим на основной экран слева
-      requestWeatherLikeCity(elem.name);
-      cityName = elem.name; //обновляем переменную, чтобы при запросе forecast обновлялась погода города
+      requestWeatherLikeCity(city);
+      cityName = city; //обновляем переменную, чтобы при запросе forecast обновлялась погода города
     });
     parentListCityes.appendChild(newLi); //добавим в шаблон отлайканный город
-  });
+  }
 }

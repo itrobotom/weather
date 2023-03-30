@@ -95,13 +95,11 @@ function renderForecast(jsonForecast) { //в аргумент можно пер�
 function createNewCity(elem) {
   const newLi = document.createElement('li');
   newLi.className = 'city-list-close';
-  const idCityInput = elem.id; 
-  newLi.id = idCityInput; //установим уникальный id элементу списка
   
   //наполним новый элемент списка
   const newCityName = document.createElement('div');
   newCityName.className = 'new-like-city';
-  newCityName.textContent = elem.name; //записываем название города  
+  newCityName.textContent = elem; //записываем название города  
   newLi.appendChild(newCityName);
   const newDelButton = document.createElement('button');
   newDelButton.className = 'btn-del-add-city';
