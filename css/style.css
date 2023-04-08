@@ -129,6 +129,15 @@ input:focus, textarea:focus, select:focus {
     justify-content: space-between;
 }
 
+.weather-like svg {
+    fill: white;
+    fill-opacity: 1; /* прозрачность заливки */
+}
+
+.weather-like .col-red {
+    fill: red;
+}
+
 /* ПРИ ДОБАВЛЕНИИ ПАДДИНГА СЛЕВА ПРИ ПЕРЕКЛЮЧЕНИИ ТАБА СИЛЬНО ВНИЗ УХОДИТ
 БЕЗ ПАДДИНГА ПРИЖАТА К ВЕРХУ... */
 .details {

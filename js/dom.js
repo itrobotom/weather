@@ -10,6 +10,7 @@ function tabNow(json, cityName, degreeCelsius) {
   document.getElementById("temp-widget").textContent = `${degreeCelsius}\xB0`; //значек градуса \xB0
   //подставляем из запроса город в виджите
   document.getElementById("city-widget").textContent = cityName;
+
 }
   
 function tabDetails(json, cityName, degreeCelsius) {

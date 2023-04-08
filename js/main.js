@@ -6,25 +6,40 @@ import {tabNow, tabDetails, createNewCity, renderForecast} from './dom.js';
 export {render}; 
 //разбить на модули (вынести константы и поиск элементов в dom)
 
-let cityName = "Томск"; //по-умолчанию город
+let cityName = ""; //по-умолчанию город
 
 //let cityesArr = [];
 let cityesSet = new Set();
 //перезапишем пустой cityesArr и добавим избранные города из localstorage при запуске приложения, если хранилище не пустое
 if(getFavoriteCities("favoriteCities") != null){
-  cityesSet = getFavoriteCities("favoriteCities");
+  cityesSet = getFavoriteCities("favoriteCities"); //забираем множество из localstorage
   render();
+}
+//checkCityInСhsen(cityName, cityesSet);
+
+//проверить, имеется ли текущее значение города в переменной cityName в избранных (из множества) и если есть, выделить цвет иконки лайка красным, а если нет белым
+//ФУНКЦИЯ ВЫЗЫВАЕТСЯ 3 раза: при лайке города, при вводе его в поисковике и при удалении города
+function checkCityInСhsen(cityName, cityesSet) {
+  const parent = document.querySelector('.weather-like');
+  console.log(parent); 
+  const likeIconSvg = parent.querySelector('svg');
+  console.log(likeIconSvg); 
+  cityesSet.has(cityName) ? likeIconSvg.classList.add('col-red') : likeIconSvg.classList.remove('col-red');
 }
 
 //проверить есть ли данные последнего введенного города в localstorage и если есть, вывести данные слева
 if(getCurrentCity("inputCity") != null){
-  requestWeatherLikeCity(getCurrentCity("inputCity"))
+  requestWeatherLikeCity(getCurrentCity("inputCity"));
+  cityName = getCurrentCity("inputCity"); //получить последний введеный город из localStorage
+  render();
 } else { //если нет, пусть выводит по-умолчанию Tomsk
+  cityName = "Tomsk";
   requestWeatherLikeCity(cityName);
 }
 
 btnLike.addEventListener("click", function() {
-   addNewCity(cityesSet, cityName)
+  addNewCity(cityesSet, cityName);
+  checkCityInСhsen(cityName, cityesSet);
 }); 
 
 btnSearchCity.addEventListener("click", requestWeather);
@@ -112,6 +127,7 @@ function updateWeather(json, cityName) {
     alert('Вы не ввели город!');
   } else {
     let degreeCelsius = Math.round(json.main.temp - 273.5);
+    checkCityInСhsen(cityName, cityesSet); //установим иконку лайка в нужный цвет по наличию города в списке избранных
     tabNow(json, cityName, degreeCelsius);
     tabDetails(json, cityName, degreeCelsius);
   }
@@ -138,6 +154,7 @@ function render() {
     //вешаем прослушку удаления на каждый новый добавленный город в избранное
     newDelButton.addEventListener("click", function() {
       delCity(cityesSet, city);
+      checkCityInСhsen(cityName, cityesSet);
     });
     //вешаем прослушку на нажатие по div где находится город в нужном li 
     newCityName.addEventListener("click", function() {
